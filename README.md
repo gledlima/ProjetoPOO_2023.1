@@ -10,5 +10,5 @@ Professor: Baldoino Fonseca<br />
   - Criação de conta;
   - Criação de comunidade;
   - Excluir conta;
-  - Edição de Conta;
+  - Edição de conta;
 
