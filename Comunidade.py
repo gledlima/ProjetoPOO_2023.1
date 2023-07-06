@@ -30,10 +30,10 @@ def showMember(index1, index2):
 
 while True:
     print()
-    print('Pressione g para criar uma comunidade')
-    print('Pressione d para mostrar todas as comunidades')
-    print('Pressione a para seguir uma comunidade')
-    print('Pressione s para mostrar seguidores de uma comunidade')
+    print('Pressione a para criar uma comunidade')
+    print('Pressione b para mostrar todas as comunidades')
+    print('Pressione c para seguir uma comunidade')
+    print('Pressione d para mostrar seguidores de uma comunidade')
     print('Pressione x para sair')
     print()
 
@@ -42,20 +42,20 @@ while True:
     action = action[0]
     print()
 
-    if action == 'g':
+    if action == 'a':
         print('Criação de comunidade:')
         cname = input('insira o nome da comunidade ')
         cdescrition = input('insira a descricao da comunidade ')
         cmember = []
         newCommunit(cname, cdescrition)
 
-    elif action == 'd':
+    elif action == 'b':
         print('Lista de Contas:')
         ncommunit = len(communtyList)
         for acomunitNumber in range(0, ncommunit):
             show(acomunitNumber)
 
-    elif action == 'a':
+    elif action == 'c':
         print('Seguir comunidade:')
         name = input('Insira o nome da comunidade que deseja seguir ')
         index = 0
@@ -67,7 +67,7 @@ while True:
                 break
             index+=1
 
-    elif action == 's':
+    elif action == 'd':
         print('Mostrar membros:')
         name = input('Insira o nome da comunidade que deseja exibir membros ')
         index = 0
