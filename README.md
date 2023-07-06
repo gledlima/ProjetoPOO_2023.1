@@ -9,6 +9,7 @@ Professor: Baldoino Fonseca<br />
 
   - Criação de conta;
   - Criação de comunidade;
+  - Seguir comunidade;
   - Excluir conta;
   - Edição de conta;
 
