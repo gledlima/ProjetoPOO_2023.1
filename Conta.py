@@ -1,3 +1,4 @@
+import json
 accountsList = []
 
 def newAccount(aLogin, aPassword, aName, aEmail):
@@ -20,11 +21,22 @@ def show(accountNumber):
     print()
 
 while True:
+    with open("Contas.txt", "r") as file:
+        for user in file:
+            u = user.split()
+            login = u[0]
+            password = u[1]
+            name = u[2]
+            email = u[3]
+            newAccount(login, password, name, email)
+        file.close()
+                
     print()
     print('Pressione a para criar uma conta')
     print('Pressione b para excluir uma conta')
     print('Pressione c para mostrar todas as contas')
     print('Pressione d para editar uma conta')
+    print('Pressione e para salvar alterações')
     print('Pressione x para sair')
     print()
 
@@ -91,7 +103,13 @@ while True:
                 break
         else:
             print('Credenciais inválidas. Não foi possível editar a conta.')
-
+    
+    elif action == 'e':
+        with open("Contas.txt", "w") as file:
+            for a in accountsList:
+                file.write("%s %s %s %s\n" % (a['login'], a['password'], a['name'], a['email']))
+        
+        
     elif action == 'x':
         break
 
