@@ -20,23 +20,23 @@ def show(accountNumber):
     print('       Email:', thisAccountDict['email'])
     print()
 
-while True:
-    with open("Contas.txt", "r") as file:
-        for user in file:
-            u = user.split()
-            login = u[0]
-            password = u[1]
-            name = u[2]
-            email = u[3]
-            newAccount(login, password, name, email)
-        file.close()
-                
+with open("Conta.txt", "r") as file:
+    for user in file:
+        u = user.split()
+        login = u[0]
+        password = u[1]
+        name = u[2]
+        email = u[3]
+        newAccount(login, password, name, email)
+    file.close()
+
+while True:               
     print()
     print('Pressione a para criar uma conta')
     print('Pressione b para excluir uma conta')
     print('Pressione c para mostrar todas as contas')
     print('Pressione d para editar uma conta')
-    print('Pressione e para salvar alterações')
+    print('Pressione e para salvar alterações e sair')
     print('Pressione x para sair')
     print()
 
@@ -105,12 +105,16 @@ while True:
             print('Credenciais inválidas. Não foi possível editar a conta.')
     
     elif action == 'e':
-        with open("Contas.txt", "w") as file:
+        with open("Conta.txt", "w") as file:
             for a in accountsList:
                 file.write("%s %s %s %s\n" % (a['login'], a['password'], a['name'], a['email']))
+            print('Alterações feitas')
+            print('Programa fechado')
+            break
         
         
     elif action == 'x':
+        print('Programa fechado')
         break
 
 print('Done')
