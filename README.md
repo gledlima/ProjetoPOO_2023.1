@@ -4,7 +4,7 @@
 Projeto da disciplina de PS com foco na construção de uma aplicação em Python.<br />
 Equipe: Leonardo Lima, Matheus Almeida, Arturo Jimenez, Gledson Lima<br />
 Professor: Baldoino Fonseca<br />
-**OBS: Mantenha todos os arquivos na mesma pasta para o correto funcionamento do programa**<br />
+<b>OBS: Mantenha todos os arquivos na mesma pasta para o correto funcionamento do programa</b><br />
 
 <h1 align="left"> FUNCIONALIDADES CRIADAS </h1>
 
