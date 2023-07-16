@@ -6,7 +6,7 @@ Equipe: Leonardo Lima, Matheus Almeida, Arturo Jimenez, Gledson Lima<br />
 Professor: Baldoino Fonseca<br />
 
 <h1 align="left"> FUNCIONALIDADES CRIADAS </h1>
-
+OBS: Mantenha todos os arquivos na mesma pasta para o correto funcionamento do programa
   - Criação de Conta;
   - Criação/Edição de Perfil;
   - Criação de Comunidades;
