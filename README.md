@@ -7,6 +7,7 @@ Professor: Baldoino Fonseca<br />
 OBS: Mantenha todos os arquivos na mesma pasta para o correto funcionamento do programa<br />
 
 <h1 align="left"> FUNCIONALIDADES CRIADAS </h1>
+
   - Criação de Conta;
   - Criação/Edição de Perfil;
   - Criação de Comunidades;
