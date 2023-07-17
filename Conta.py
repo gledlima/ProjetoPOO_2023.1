@@ -64,10 +64,9 @@ while True:
     elif action == 'b':
         print('Exclusão de conta:')
         provLogin = input('Qual seu login? ')
-        userPassword = input('Qual sua senha? ')
-        nAccounts = len(accountsList)
+        provPassword = input('Qual sua senha? ')
         for a in accountsList:
-            if a['login'] == provLogin and a['password'] == userPassword:
+            if a['login'] == provLogin and a['password'] == provPassword:
                 accountsList.remove(a)
                 break
                 saveChanges()
@@ -83,10 +82,10 @@ while True:
     elif action == 'd':
         print('Edição de conta:')
         provLogin = input('Qual seu login? ')
-        userPassword = input('Qual sua senha? ')
+        provPassword = input('Qual sua senha? ')
         nAccounts = len(accountsList)
         for accountNumber in range(nAccounts):
-            if accountsList[accountNumber]['login'] == provLogin and accountsList[accountNumber]['password'] == userPassword:
+            if accountsList[accountNumber]['login'] == provLogin and accountsList[accountNumber]['password'] == provPassword:
                 print('Escolha o campo que deseja editar:')
                 print('1. Login')
                 print('2. Senha')
@@ -117,4 +116,3 @@ while True:
         break
 
 print('Done')
-
