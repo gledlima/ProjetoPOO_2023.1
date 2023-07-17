@@ -111,7 +111,7 @@ while True:
                 print('Credenciais inválidas. Não foi possível editar a conta.')
         
     elif action == 'x':
-        print('Programa fechado')
+        print('Programa Fechado')
         saveChanges()
         break
 
