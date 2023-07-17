@@ -1,6 +1,11 @@
 import json
 accountsList = []
 
+def saveChanges():
+    with open('Conta.txt', 'w') as file:
+        for a in accountsList:
+            file.write("%s %s %s %s\n" % (a['login'], a['password'], a['name'], a['email']))
+
 def newAccount(aLogin, aPassword, aName, aEmail):
     global accountsList
     newAccountDict = {'login': aLogin, 'password': aPassword, 'name': aName, 'email': aEmail}
@@ -36,7 +41,6 @@ while True:
     print('Pressione b para excluir uma conta')
     print('Pressione c para mostrar todas as contas')
     print('Pressione d para editar uma conta')
-    print('Pressione e para salvar alterações e sair')
     print('Pressione x para sair')
     print()
 
@@ -54,7 +58,8 @@ while True:
 
         userAccountNumber = len(accountsList)
         newAccount(userLogin, userPassword, userName, userEmail)
-        print('Seu número de conta:', userAccountNumber)
+        saveChanges()
+        print('Conta criada com sucesso!')
 
     elif action == 'b':
         print('Exclusão de conta:')
@@ -65,8 +70,9 @@ while True:
             if a['login'] == provLogin and a['password'] == userPassword:
                 accountsList.remove(a)
                 break
-        else:
-            print('Credenciais inválidas. Não foi possível excluir a conta.')
+                saveChanges()
+            else:
+                print('Credenciais inválidas. Não foi possível excluir a conta.')
 
     elif action == 'c':
         print('Lista de Contas:')
@@ -101,20 +107,14 @@ while True:
                 else:
                     print('Opção inválida.')
                 break
-        else:
-            print('Credenciais inválidas. Não foi possível editar a conta.')
-    
-    elif action == 'e':
-        with open("Conta.txt", "w") as file:
-            for a in accountsList:
-                file.write("%s %s %s %s\n" % (a['login'], a['password'], a['name'], a['email']))
-            print('Alterações feitas')
-            print('Programa fechado')
-            break
-        
+                saveChanges()
+            else:
+                print('Credenciais inválidas. Não foi possível editar a conta.')
         
     elif action == 'x':
         print('Programa fechado')
+        saveChanges()
         break
 
 print('Done')
+
