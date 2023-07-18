@@ -1,6 +1,5 @@
 import json
 import time
-import main
 import sys
 communityList = []
 accountsList = []
@@ -8,7 +7,7 @@ accountsList = []
 
 
 
-#Bloco de funções de manipulação da comunidade
+# Bloco de funções de manipulação da comunidade
 def newCommunity(Cname, Cdescription):
     global communityList
     Cmember = []
@@ -23,7 +22,7 @@ def followCommunity(index, username):
 
 
 
-#Bloco de funções de manipulação da conta
+# Bloco de funções de manipulação da conta
 def newAccount(aLogin, aPassword, aName, aEmail):
     global accountsList
     aFollower = []
@@ -38,6 +37,13 @@ def followAccount(index, name):
 def editAccount(accountNumber, field, newValue):
     global accountsList
     accountsList[accountNumber][field] = newValue
+
+def deleteAccount(accountNumber):
+    global accountsList
+    account_name = accountsList[accountNumber]['name']
+    del accountsList[accountNumber]
+    for community in communityList:
+        community['member'] = [member for member in community['member'] if member['username'] != account_name]
 
 def show(accountNumber):
     global accountsList
@@ -55,10 +61,34 @@ def showFollower(index1, index2):
     members = accountsList[index1]['follower']
     print('       Follower','(',index2,')',':', members[index2]['name'])
 
+def removeAccountFromFollowers(username):
+    global accountsList
+    for account in accountsList:
+        account['follower'] = [follower for follower in account['follower'] if follower['name'] != username]
+
+def removeAccountFromCommunities(username):
+    global communityList
+    for community in communityList:
+        community['member'] = [member for member in community['member'] if member['username'] != username]
+
+def updateUsernameInFollowers(oldUsername, newUsername):
+    global accountsList
+    for account in accountsList:
+        for follower in account['follower']:
+            if follower['name'] == oldUsername:
+                follower['name'] = newUsername
+
+def updateUsernameInMembers(oldUsername, newUsername):
+    global communityList
+    for community in communityList:
+        for member in community['member']:
+            if member['username'] == oldUsername:
+                member['username'] = newUsername
 
 
 
-#Bloco de funções de manipulação txt
+
+# Bloco de funções de manipulação txt
 def saveChangesAccount():
     with open("Conta.txt", "w") as file:
         for a in accountsList:
@@ -116,10 +146,10 @@ with open("Comunidade.txt", "r") as file:
             followCommunity(index, member_account)
         index += 1
 
-            
 
 
-#Função de operações
+
+# Função de operações
 def operations():
     while True:
         print()
@@ -131,11 +161,10 @@ def operations():
         print('Pressione E para mostrar todas as contas')
         print('Pressione F para mostrar os seguidores de uma conta')
         print('Pressione G para editar uma conta')
-        print('Pressione Q para retornar ao menu')
         print('Pressione X para fechar o programa')
         print()
 
-        action = input('Oque você quer fazer? ')
+        action = input('O que você quer fazer? ')
         action = action.lower()
         action = action[0]
         print()
@@ -175,13 +204,12 @@ def operations():
             removed_accounts = []
             for a in accountsList:
                 if a['login'] == provLogin and a['password'] == provPassword:
-                    accountsList.remove(a)
                     removed_accounts.append(a['name'])
+                    accountsList.remove(a)
+                    removeAccountFromFollowers(a['name'])
+                    removeAccountFromCommunities(a['name'])
                     print('Conta excluída com sucesso!')
-            if removed_accounts:
-                for a in accountsList:
-                    followers = a['follower']
-                    a['follower'] = [follower for follower in followers if follower['name'] not in removed_accounts]
+                    break
             else:
                 print('Credenciais inválidas. Não foi possível excluir a conta.')
 
@@ -238,9 +266,7 @@ def operations():
                     else:
                         print('Credenciais inválidas, tente novamente')
                     break
-
                 index += 1
-
             if not account_found:
                 print('O username inserido é inválido, tente novamente')
 
@@ -287,7 +313,7 @@ def operations():
                         new_login = input('Digite o novo login: ')
                         for a in accountsList:
                             if a['login'] == new_login:
-                                print('Esse login ja está em uso, tente novamente')
+                                print('Esse login já está em uso, tente novamente')
                                 break
                         else:
                             editAccount(accountNumber, 'login', new_login)
@@ -300,16 +326,19 @@ def operations():
                         new_name = input('Digite o novo username: ')
                         for b in accountsList:
                             if b['name'] == new_name:
-                                print('Esse username ja está em uso, tente novamente')
+                                print('Esse username já está em uso, tente novamente')
                                 break
                         else:
+                            old_username = accountsList[accountNumber]['name']
                             editAccount(accountNumber, 'name', new_name)
+                            updateUsernameInFollowers(old_username, new_name)
+                            updateUsernameInMembers(old_username, new_name)
                             print('Username alterado com sucesso!')
                     elif field_choice == 4:
                         new_email = input('Digite o novo email: ')
                         for c in accountsList:
                             if c['email'] == new_email:
-                                print('Esse email ja está em uso, tente novamente')
+                                print('Esse email já está em uso, tente novamente')
                                 break
                         else:
                             editAccount(accountNumber, 'email', new_email)
@@ -321,11 +350,6 @@ def operations():
                 print('Credenciais inválidas. Não foi possível editar a conta.')
 
 
-        elif action == 'q':
-            time.sleep(0.5)
-            main.menu()
-        
-        
         elif action == 'x':
             print('Programa fechado!')
             time.sleep(0.5)
