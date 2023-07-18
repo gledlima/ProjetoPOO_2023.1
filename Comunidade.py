@@ -1,6 +1,4 @@
-import json
 import time
-import main
 import sys
 communityList = []
 accountsList = []
@@ -56,7 +54,7 @@ def followAccount(index, name):
 
 
 
-#Bloco de funções de manipulação do txt
+#Bloco de funções de manipulação txt
 def saveChangesCommunity():
     with open("Comunidade.txt", "w") as file:
         for a in communityList:
@@ -119,8 +117,7 @@ def operations():
         print('Pressione E para mostrar todas as comunidades')
         print('Pressione F para mostrar seguidores de uma comunidade')
         print('Pressione G para editar uma comunidade')
-        print('Pressione Q para retornar ao menu')
-        print('Pressione X para retornar ao menu')
+        print('Pressione X para fechar o programa')
         print()
 
         action = input('Oque você quer fazer? ')
@@ -272,15 +269,15 @@ def operations():
                 print('A comunidade inserida é inválida ou não existe.')
 
 
-        elif action == 'q':
-            main.menu()
-
-
         elif action == 'x':
             print('Programa fechado!')
             time.sleep(0.5)
             sys.exit()
 
+
+        else:
+            print('Opção inválida, tente novamente!')
+        
 
         time.sleep(0.5)
         saveChangesCommunity()
