@@ -1,3 +1,5 @@
+import main
+import json
 import time
 import sys
 communityList = []
@@ -55,52 +57,29 @@ def followAccount(index, name):
 
 
 #Bloco de funções de manipulação txt
+def loadAccountsFromJSON():
+    global accountsList
+    try:
+        with open("Conta.json", "r") as file:
+            accountsList = json.load(file)
+    except FileNotFoundError:
+        accountsList = []
+    except json.JSONDecodeError:
+        accountsList = []
+
 def saveChangesCommunity():
-    with open("Comunidade.txt", "w") as file:
-        for a in communityList:
-            file.write("%s\n%s\n" % (a['name'], a['description']))
-            numFollowers = len(a['member'])
-            file.write("%i\n" % numFollowers)
-            for b in a['member']:
-                file.write(b['username'])
-                file.write("\n")
+    with open("Comunidade.json", "w") as file:
+        json.dump(communityList, file, indent=2)
 
-with open("Conta.txt", "r") as file:
-    index = 0
-    for user in file:
-        u = user.split()
-        login = u[0]
-        password = u[1]
-        name = u[2]
-        email = u[3]
-        newAccount(login, password, name, email)
-
-        next_line = next(file)
-        num_followers = int(next_line.strip())
-
-        for follower in range(num_followers):
-            next_line = next(file)
-            account = next_line.strip()
-            followAccount(index, account)
-        index += 1 
-
-with open("Comunidade.txt", "r") as file:
-    index = 0
-    while True:
-        name = file.readline().strip()
-        description = file.readline().strip()
-        
-        if not name or not description:
-            break
-        
-        newCommunity(name, description)
-
-        num_members = int(file.readline().strip())
-
-        for member in range(num_members):
-            member_account = file.readline().strip()
-            followCommunity(index, member_account)
-        index += 1
+def loadCommunitiesFromJSON():
+    global communityList
+    try:
+        with open("Comunidade.json", "r") as file:
+            communityList = json.load(file)
+    except FileNotFoundError:
+        communityList = []
+    except json.JSONDecodeError:
+        communityList = []
 
 
 
@@ -108,6 +87,8 @@ with open("Comunidade.txt", "r") as file:
 #Função de operações
 def operations():
     while True:
+        loadAccountsFromJSON()
+        loadCommunitiesFromJSON()
         print()
         print()
         print('Pressione A para criar uma comunidade')
@@ -117,6 +98,7 @@ def operations():
         print('Pressione E para mostrar todas as comunidades')
         print('Pressione F para mostrar seguidores de uma comunidade')
         print('Pressione G para editar uma comunidade')
+        print('Pressione Q para voltar ao menu')
         print('Pressione X para fechar o programa')
         print()
 
@@ -267,6 +249,10 @@ def operations():
 
             if not community_found:
                 print('A comunidade inserida é inválida ou não existe.')
+
+
+        elif action == 'q':
+            main.menu()
 
 
         elif action == 'x':
