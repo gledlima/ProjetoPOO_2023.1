@@ -9,7 +9,10 @@ Professor: Baldoino Fonseca<br />
 <h1 align="left"> FUNCIONALIDADES CRIADAS </h1>
 
   - Criação de Conta;
-  - Criação/Edição de Perfil;
-  - Criação de Comunidades;
+  - Edição de Conta;
+  - Sistema de Seguidores;
+  - Exclusão de Conta;
+  - Criação de Comunidade;
+  - Edição de Comunidade;
   - Adição de Membros;
-  - Remoção de Conta;
+  - Exclusão de Comunidade;
