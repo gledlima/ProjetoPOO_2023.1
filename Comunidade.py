@@ -36,21 +36,13 @@ def show(communityNumber):
     print('       Admins: ', len(thisAcommunityList['admin']))
     print()
 
-def showMember(index1, index2):
-    global communityList
-    members = communityList[index1]['member']
-    print('       Member','(',index2,')',':', members[index2]['username'])
-
-def showAdmin(index1, index2):
-    global communityList
-    admins = communityList[index1]['admin']
-    print('       Admin','(',index2,')',':', admins[index2]['username'])
-
 def is_user_admin(community, username):
     for admin in community['admin']:
         if admin['username'] == username:
             return True
     return False
+
+
 
 
 #Bloco de funções de manipulação de conta
@@ -244,19 +236,17 @@ def operations():
             time.sleep(0.5)
             print('Mostrar membros:')
             name = input('Insira o nome da comunidade que deseja exibir membros: ')
-            index = 0
             community_found = False
-            for a in communityList:
-                if a['name'] == name:
+            for community in communityList:
+                if community['name'] == name:
                     community_found = True
-                    nummembers = len(a['member'])
-                    if nummembers == 0:
+                    num_members = len(community['member'])
+                    if num_members == 0:
                         print('Esta comunidade não possui membros!')
                     else:
-                        for b in range(0, nummembers):
-                            showMember(index, b)
-                    break 
-                index += 1
+                        for member_index in range(num_members):
+                            print(f'       Member ({member_index}): {community["member"][member_index]["username"]}')
+                    break
             if not community_found:
                 print('Nome de comunidade inválido, tente novamente')
 
@@ -265,19 +255,17 @@ def operations():
             time.sleep(0.5)
             print('Mostrar administradores:')
             name = input('Insira o nome da comunidade que deseja exibir administradores: ')
-            index = 0
             community_found = False
-            for a in communityList:
-                if a['name'] == name:
+            for community in communityList:
+                if community['name'] == name:
                     community_found = True
-                    numadmins = len(a['admin'])
-                    if numadmins == 0:
+                    num_admins = len(community['admin'])
+                    if num_admins == 0:
                         print('Esta comunidade não possui administradores!')
                     else:
-                        for b in range(0, numadmins):
-                            showAdmin(index, b)
-                    break 
-                index += 1
+                        for admin_index in range(num_admins):
+                            print(f'       Admin ({admin_index}): {community["admin"][admin_index]["username"]}')
+                    break
             if not community_found:
                 print('Nome de comunidade inválido, tente novamente')
 
@@ -306,25 +294,31 @@ def operations():
                                     username = input('Insira o nome do usuário que deseja tornar administrador: ')
                                     for member in community['member']:
                                         if member['username'] == username:
-                                            getAdminRights(communityList.index(community), username)
-                                            print(f'{username} agora é um administrador da comunidade.')
+                                            if is_user_admin(community, username):
+                                                print(f'{username} já é um administrador da comunidade.')
+                                            else:
+                                                getAdminRights(communityList.index(community), username)
+                                                print(f'{username} agora é um administrador da comunidade.')
                                             break
                                     else:
                                         print('Usuário não encontrado na comunidade.')
                                 elif field_choice == 2:
-                                    if len(a['admin']) == 1:
+                                    if len(community['admin']) == 1:
                                         print('Você é o único administrador, não pode renunciar ao cargo.')
                                     else:
-                                        a['admin'] = [admin for admin in a['admin'] if admin['username'] != provName]
+                                        community['admin'] = [admin for admin in community['admin'] if admin['username'] != provName]
                                         print(f'{provName} renunciou ao cargo de administrador.')
                                 elif field_choice == 3:
                                     username = input('Insira o nome do usuário que deseja excluir da comunidade: ')
-                                    for member in a['member']:
+                                    for member in community['member']:
                                         if member['username'] == username:
-                                            a['member'] = [m for m in a['member'] if m['username'] != username]
-                                            print(f'{username} foi excluído da comunidade.')
-                                            if is_user_admin(a, username):
-                                                a['admin'] = [admin for admin in a['admin'] if admin['username'] != username]
+                                            if is_user_admin(community, username):
+                                                print('Você não pode excluir um administrador da comunidade.')
+                                            else:
+                                                community['member'] = [m for m in community['member'] if m['username'] != username]
+                                                print(f'{username} foi excluído da comunidade.')
+                                                if is_user_admin(community, username):
+                                                    community['admin'] = [admin for admin in community['admin'] if admin['username'] != username]
                                             break
                                     else:
                                         print('Usuário não encontrado na comunidade.')
@@ -336,7 +330,6 @@ def operations():
                     else:
                         print('Credenciais inválidas, tente novamente')
                     break
-
             if not community_found:
                 print('Nome de comunidade inválido, tente novamente')
 
