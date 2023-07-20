@@ -2,8 +2,40 @@ import main
 import json
 import time
 import sys
+profileList = []
 communityList = []
 accountsList = []
+
+
+
+
+#Bloco de funções de manipulação do perfil
+def newProfile(pName):
+    global profileList
+    pMessages = []
+    pPosts = []
+    newProfile = {'name': pName, 'messages': pMessages, 'posts': pPosts}
+    profileList.append(newProfile)
+
+def addMessage(index, message):
+    global profileList
+    newMessage = {'message': message}
+    profileList[index]['messages'].append(newMessage)
+
+def addPost(index, post):
+    global profileList
+    newPost = {'post': post}
+    profileList[index]['posts'].append(newPost)
+
+def removeProfile(profile_name):
+    global profileList
+    profileList = [profile for profile in profileList if profile['name'] != profile_name]
+
+def updateProfileUsername(oldUsername, newUsername):
+    global profileList
+    for profile in profileList:
+        if profile['name'] == oldUsername:
+            profile['name'] = newUsername
 
 
 
@@ -58,11 +90,6 @@ def show(accountNumber):
     print('       Followers:', len(thisAccountDict['follower']))
     print()
 
-def showFollower(index1, index2):
-    global accountsList
-    members = accountsList[index1]['follower']
-    print('       Follower','(',index2,')',':', members[index2]['name'])
-
 def removeAccountFromFollowers(username):
     global accountsList
     for account in accountsList:
@@ -101,6 +128,7 @@ def updateUsernameInAdmins(oldUsername, newUsername):
 
 
 
+
 # Bloco de funções de manipulação txt
 def saveChangesAccount():
     with open("Conta.json", "w") as file:
@@ -130,6 +158,20 @@ def loadCommunitiesFromJSON():
     except json.JSONDecodeError:
         communityList = []
 
+def saveChangesProfile():
+    with open("Perfil.json", "w") as file:
+        json.dump(profileList, file, indent=2)
+
+def loadProfilesFromJSON():
+    global profileList
+    try:
+        with open("Perfil.json", "r") as file:
+            profileList = json.load(file)
+    except FileNotFoundError:
+        profileList = []
+    except json.JSONDecodeError:
+        profileList = []
+
 
 
 
@@ -138,6 +180,7 @@ def operations():
     while True:
         loadAccountsFromJSON()
         loadCommunitiesFromJSON()
+        loadProfilesFromJSON()
         print()
         print()
         print('Pressione A para criar uma conta')
@@ -146,7 +189,8 @@ def operations():
         print('Pressione D para deixar de seguir uma conta')
         print('Pressione E para mostrar todas as contas')
         print('Pressione F para mostrar os seguidores de uma conta')
-        print('Pressione G para editar uma conta')
+        print('Pressione G para mostrar quem uma conta segue')
+        print('Pressione H para editar uma conta')
         print('Pressione Q para voltar ao menu')
         print('Pressione X para fechar o programa')
         print()
@@ -160,34 +204,35 @@ def operations():
         if action == 'a':
             time.sleep(0.5)
             print('Nova conta:')
-            userLogin = input('Qual seu login? ')
+            userLogin = input('Qual será seu login? ')
             for a in accountsList:
                 if a['login'] == userLogin:
                     print('Esse login já está em uso, tente novamente')
                     break
             else:
-                userPassword = input('Qual sua senha? ')
-                userName = input('Qual seu username? ')
+                userPassword = input('Qual será sua senha? ')
+                userName = input('Qual será seu username? ')
                 for b in accountsList:
                     if b['name'] == userName:
                         print('Esse username já está em uso, tente novamente')
                         break
                 else:
-                    userEmail = input('Qual seu email? ')
+                    userEmail = input('Qual será seu email? ')
                     for c in accountsList:
                         if c['email'] == userEmail:
                             print('Esse email já está em uso, tente novamente')
                             break
                     else:
                         newAccount(userLogin, userPassword, userName, userEmail)
+                        newProfile(userName)
                         print('Conta criada com sucesso!')
 
 
         elif action == 'b':
             time.sleep(0.5)
             print('Exclusão de conta:')
-            provLogin = input('Qual seu login? ')
-            provPassword = input('Qual sua senha? ')
+            provLogin = input('Insira seu login: ')
+            provPassword = input('Insira sua senha: ')
             removed_accounts = []
             for a in accountsList:
                 if a['login'] == provLogin and a['password'] == provPassword:
@@ -196,6 +241,7 @@ def operations():
                     removeAccountFromFollowers(a['name'])
                     removeAccountFromMembers(a['name'])
                     removeAccountFromAdmins(a['name'])
+                    removeProfile(a['name'])
                     print('Conta excluída com sucesso!')
                     break
             else:
@@ -210,8 +256,8 @@ def operations():
             account_found = False
             for a in accountsList:
                 if a['name'] == provName:
-                    provLogin = input('Insira seu Login: ')
-                    provPass = input('Insira sua Senha: ')
+                    provLogin = input('Insira seu login: ')
+                    provPass = input('Insira sua senha: ')
                     for b in accountsList:
                         if b['login'] == provLogin and b['password'] == provPass:
                             follower_names = [follower['name'] for follower in a['follower']]
@@ -236,7 +282,6 @@ def operations():
             provName = input('Insira o username da conta que deseja deixar de seguir: ')
             index = 0
             account_found = False
-
             for a in accountsList:
                 if a['name'] == provName:
                     provLogin = input('Insira seu Login: ')
@@ -263,27 +308,52 @@ def operations():
             time.sleep(0.5)
             print('Lista de Contas:')
             nAccounts = len(accountsList)
-            for accountNumber in range(nAccounts):
-                show(accountNumber)
+            if nAccounts == 0:
+                print('Não existem contas criadas no momento!')
+            else:
+                for accountNumber in range(nAccounts):
+                    show(accountNumber)
 
 
         elif action == 'f':
             time.sleep(0.5)
             print('Mostrar seguidores:')
-            name = input('Insira a conta que deseja exibir seguidores: ')
-            index = 0
-            print()
-            print('Account Name: ', name)
+            provLogin = input('Insira seu login: ')
+            provPassword = input('Insira sua senha: ')
             for a in accountsList:
-                if a['name'] == name:
-                    numfollowers = len(a['follower'])
-                    for b in range(0, numfollowers):
-                        showFollower(index, b)
-                    break 
-                index+=1
+                if a['login'] == provLogin and a['password'] == provPassword:
+                    follower_names = [follower['name'] for follower in a['follower']]
+                    if not follower_names:
+                        print('Essa conta não possui seguidores!')
+                    else:
+                        print('Seguidores:')
+                        for index, follower_name in enumerate(follower_names):
+                            print(f'       Follower ({index}): {follower_name}')
+                    break
+            else:
+                print('Credenciais inválidas, não foi possível exibir os seguidores.')
 
 
         elif action == 'g':
+            time.sleep(0.5)
+            print('Contas que você segue:')
+            provLogin = input('Insira seu login: ')
+            provPassword = input('Insira sua senha: ')
+            for account in accountsList:
+                if account['login'] == provLogin and account['password'] == provPassword:
+                    user_followed_accounts = [follower['name'] for follower in account['follower']]
+                    if not user_followed_accounts:
+                        print('Você não está seguindo nenhuma conta.')
+                    else:
+                        print('Contas seguidas por você:')
+                        for index, followed_account in enumerate(user_followed_accounts):
+                            print(f'       Following ({index}): {followed_account}')
+                    break
+            else:
+                print('Credenciais inválidas. Não foi possível verificar as contas que você segue.')
+
+
+        elif action == 'h':
             time.sleep(0.5)
             print('Edição de conta:')
             provLogin = input('Qual seu login? ')
@@ -319,6 +389,7 @@ def operations():
                         else:
                             old_username = accountsList[accountNumber]['name']
                             editAccount(accountNumber, 'name', new_name)
+                            updateProfileUsername(old_username, new_name)
                             updateUsernameInFollowers(old_username, new_name)
                             updateUsernameInMembers(old_username, new_name)
                             updateUsernameInAdmins(old_username, new_name)
@@ -352,6 +423,7 @@ def operations():
         time.sleep(0.5)
         saveChangesAccount()
         saveChangesCommunity()
+        saveChangesProfile()
 
 print('Done')
 
