@@ -12,7 +12,8 @@ accountsList = []
 def newCommunity(Cname, Cdescription):
     global communityList
     Cmember = []
-    newCommunity = {'name': Cname, 'description': Cdescription, 'member': Cmember}
+    Cadmin = []
+    newCommunity = {'name': Cname, 'description': Cdescription, 'member': Cmember, 'admin': Cadmin}
     communityList.append(newCommunity)
 
 def followCommunity(index, username):
@@ -67,10 +68,15 @@ def removeAccountFromFollowers(username):
     for account in accountsList:
         account['follower'] = [follower for follower in account['follower'] if follower['name'] != username]
 
-def removeAccountFromCommunities(username):
+def removeAccountFromMembers(username):
     global communityList
     for community in communityList:
         community['member'] = [member for member in community['member'] if member['username'] != username]
+
+def removeAccountFromAdmins(username):
+    global communityList
+    for community in communityList:
+        community['admin'] = [admin for admin in community['admin'] if admin['username'] != username]
 
 def updateUsernameInFollowers(oldUsername, newUsername):
     global accountsList
@@ -86,6 +92,12 @@ def updateUsernameInMembers(oldUsername, newUsername):
             if member['username'] == oldUsername:
                 member['username'] = newUsername
 
+def updateUsernameInAdmins(oldUsername, newUsername):
+    global communityList
+    for community in communityList:
+        for admin in community['admin']:
+            if admin['username'] == oldUsername:
+                admin['username'] = newUsername
 
 
 
@@ -182,7 +194,8 @@ def operations():
                     removed_accounts.append(a['name'])
                     accountsList.remove(a)
                     removeAccountFromFollowers(a['name'])
-                    removeAccountFromCommunities(a['name'])
+                    removeAccountFromMembers(a['name'])
+                    removeAccountFromAdmins(a['name'])
                     print('Conta excluída com sucesso!')
                     break
             else:
@@ -279,10 +292,10 @@ def operations():
             for accountNumber in range(nAccounts):
                 if accountsList[accountNumber]['login'] == provLogin and accountsList[accountNumber]['password'] == userPassword:
                     print('Escolha o campo que deseja editar:')
-                    print('1. Login')
-                    print('2. Senha')
-                    print('3. Username')
-                    print('4. Email')
+                    print('     1. Login')
+                    print('     2. Senha')
+                    print('     3. Username')
+                    print('     4. Email')
                     field_choice = int(input('Opção: '))
                     if field_choice == 1:
                         new_login = input('Digite o novo login: ')
@@ -308,6 +321,7 @@ def operations():
                             editAccount(accountNumber, 'name', new_name)
                             updateUsernameInFollowers(old_username, new_name)
                             updateUsernameInMembers(old_username, new_name)
+                            updateUsernameInAdmins(old_username, new_name)
                             print('Username alterado com sucesso!')
                     elif field_choice == 4:
                         new_email = input('Digite o novo email: ')
