@@ -4,6 +4,7 @@ import main
 import sys
 profileList = []
 accountsList = []
+communityList = []
 
 
 
@@ -26,7 +27,7 @@ def addPost(index, post):
     newPost = {'post': post}
     profileList[index]['posts'].append(newPost)
 
-
+##def acessPerfil()
 
 
 
@@ -50,29 +51,21 @@ def saveChangesAccount():
     with open("Conta.json", "w") as file:
         json.dump(accountsList, file, indent=2)
 
-def loadAccountsFromJSON():
-    global accountsList
+def loadDataFromJSON(archive):
+    print(archive)
     try:
-        with open("Conta.json", "r") as file:
-            accountsList = json.load(file)
+        with open(archive, "r") as file:
+            data = json.load(file)
     except FileNotFoundError:
-        accountsList = []
+        data = []
     except json.JSONDecodeError:
-        accountsList = []
+        data = []
+
+    return data
 
 def saveChangesProfile():
     with open("Perfil.json", "w") as file:
         json.dump(profileList, file, indent=2)
-
-def loadProfilesFromJSON():
-    global profileList
-    try:
-        with open("Perfil.json", "r") as file:
-            profileList = json.load(file)
-    except FileNotFoundError:
-        profileList = []
-    except json.JSONDecodeError:
-        profileList = []
 
 
 
@@ -80,8 +73,12 @@ def loadProfilesFromJSON():
 #Função de operações
 def operations():
     while True:
-        loadAccountsFromJSON()
-        loadProfilesFromJSON()
+        accountsList = loadDataFromJSON("Conta.json")
+        print('contas:\n',accountsList,'\n')
+        profileList = loadDataFromJSON("Perfil.json")
+        print('perfis:\n',profileList,'\n')
+        communityList = loadDataFromJSON("Comunidade.json")
+        print('comunidades:\n',communityList,'\n')
         print()
         print()
         print('Pressiona A para acessar suas mensagens')
@@ -137,6 +134,7 @@ def operations():
         saveChangesAccount()
         saveChangesProfile()
 
+print('Done')
 
-if __name__ == '_main_':
+if __name__ == '__main__':
     operations()
