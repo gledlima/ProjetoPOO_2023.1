@@ -3,31 +3,34 @@ import json
 import time
 import sys
 communityList = []
+profileList = []
 accountsList = []
 
 
 
 
 #Bloco de funções de manipulação da comunidade
-def newCommunity(Cname, Cdescription):
-    global communityList
-    Cmember = []
-    Cadmin = []
+def newCommunity(Cname, Cdescription, creator, communityList):
+    Cmember = [{'username': creator}]
+    Cadmin = [{'username' : creator}]
     newCommunity = {'name': Cname, 'description': Cdescription, 'member': Cmember, 'admin': Cadmin}
     communityList.append(newCommunity)
 
-def followCommunity(index, username):
-    global communityList
+def newProfileforcommunity(pName, profileList):
+    pMessages = []
+    pPosts = []
+    newProfile = {'name': pName, 'messages': pMessages, 'posts': pPosts}
+    profileList.append(newProfile)
+
+def followCommunity(index, username, commmunityList):
     newMember = {'username': username}
     communityList[index]['member'].append(newMember)
 
-def getAdminRights(index, username):
-    global communityList
+def getAdminRights(index, username, communityList):
     newAdmin = {'username': username}
     communityList[index]['admin'].append(newAdmin)
 
-def show(communityNumber):
-    global communityList
+def show(communityNumber, communityList):
     print('Community', communityNumber)
     thisAcommunityList = communityList[communityNumber]
     print('       Name:', thisAcommunityList['name'])
@@ -61,29 +64,20 @@ def followAccount(index, name):
 
 
 #Bloco de funções de manipulação txt
-def loadAccountsFromJSON():
-    global accountsList
+def loadDataFromJSON(archive):
     try:
-        with open("Conta.json", "r") as file:
-            accountsList = json.load(file)
+        with open(archive, "r") as file:
+            data = json.load(file)
     except FileNotFoundError:
-        accountsList = []
+        data = []
     except json.JSONDecodeError:
-        accountsList = []
+        data = []
 
-def saveChangesCommunity():
-    with open("Comunidade.json", "w") as file:
-        json.dump(communityList, file, indent=2)
+    return data
 
-def loadCommunitiesFromJSON():
-    global communityList
-    try:
-        with open("Comunidade.json", "r") as file:
-            communityList = json.load(file)
-    except FileNotFoundError:
-        communityList = []
-    except json.JSONDecodeError:
-        communityList = []
+def saveChangesdata(archive, data):
+    with open(archive, "w") as file:
+        json.dump(data, file, indent=2)
 
 
 
@@ -91,8 +85,10 @@ def loadCommunitiesFromJSON():
 #Função de operações
 def operations():
     while True:
-        loadAccountsFromJSON()
-        loadCommunitiesFromJSON()
+        accountsList = loadDataFromJSON('Conta.json')
+        communityList = loadDataFromJSON('Comunidade.json')
+        profileList = loadDataFromJSON('Perfil.json')
+
         print()
         print()
         print('Pressione A para criar uma comunidade')
@@ -124,20 +120,18 @@ def operations():
                     print('Esse nome de comunidade já está em uso. Por favor, escolha outro nome.')
                     break
                 index += 1
+
+            cdescription = input('Insira a descrição da comunidade: ')
+            provLogin = input('Insira seu login: ')
+            provPassword = input('Insira sua senha: ')
+            for account in accountsList:
+                if account['login'] == provLogin and account['password'] == provPassword:
+                    newCommunity(cname, cdescription, provLogin, communityList)
+                    newProfileforcommunity(cname, profileList)
+                    print('Comunidade criada com sucesso!')
+                    break
             else:
-                cdescription = input('Insira a descrição da comunidade: ')
-                provLogin = input('Insira seu login: ')
-                provPassword = input('Insira sua senha: ')
-                for account in accountsList:
-                    if account['login'] == provLogin and account['password'] == provPassword:
-                        newCommunity(cname, cdescription)
-                        followCommunity(index, account['name'])
-                        getAdminRights(index, account['name'])
-                        print('Comunidade criada com sucesso!')
-                        break
-                else:
-                    print('Credenciais inválidas, tente novamente')
-                
+                print('Credenciais inválidas, tente novamente')
 
         elif action == 'b':
             time.sleep(0.5)
@@ -181,9 +175,9 @@ def operations():
                     provPassword = input('Insira a senha: ')
                     for b in accountsList:
                         if b['login'] == provLogin and b['password'] == provPassword:
-                            followCommunity(index, b['name'])
+                            followCommunity(index, b['name'], communityList)
                             if len(a['admin']) == 0:
-                                getAdminRights(index, b['name'])
+                                getAdminRights(index, b['name'], communityList)
                                 print('Você se tornou um administrador da comunidade!')
                             print('Comunidade seguida com sucesso!')
                             valid_community = True
@@ -229,7 +223,7 @@ def operations():
                 print('Não existem comunidades criadas no momento!')
             else:
                 for aCommunityNumber in range(0, nCommunity):
-                    show(aCommunityNumber)
+                    show(aCommunityNumber, communityList)
 
 
         elif action == 'f':
@@ -297,7 +291,7 @@ def operations():
                                             if is_user_admin(community, username):
                                                 print(f'{username} já é um administrador da comunidade.')
                                             else:
-                                                getAdminRights(communityList.index(community), username)
+                                                getAdminRights(communityList.index(community), username, communityList)
                                                 print(f'{username} agora é um administrador da comunidade.')
                                             break
                                     else:
@@ -388,7 +382,10 @@ def operations():
         
 
         time.sleep(0.5)
-        saveChangesCommunity()
+        print(communityList)
+        saveChangesdata('Comunidade.json', communityList)
+        saveChangesdata('Perfil.json', profileList)
+
 
 print('Done')
 
