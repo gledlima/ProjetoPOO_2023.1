@@ -346,8 +346,10 @@ def operations():
                         print('Você não está seguindo nenhuma conta.')
                     else:
                         print('Contas seguidas por você:')
-                        for index, followed_account in enumerate(user_followed_accounts):
-                            print(f'       Following ({index}): {followed_account}')
+                        index = 0
+                        for followed_account in user_followed_accounts:
+                            print('       Following', '(' , index , ')' , ':' , followed_account)
+                            index += 1
                     break
             else:
                 print('Credenciais inválidas. Não foi possível verificar as contas que você segue.')
