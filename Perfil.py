@@ -10,8 +10,7 @@ communityList = []
 
 
 #Bloco de funções de manipulação do perfil
-def newProfile(pName):
-    global profileList
+def newProfile(pName, profileList):
     pMessages = []
     pPosts = []
     newProfile = {'name': pName, 'messages': pMessages, 'posts': pPosts}
@@ -43,6 +42,20 @@ def followAccount(index, name):
     newMember = {'name': name}
     accountsList[index]['follower'].append(newMember)
 
+def searchprofile(name, profileList, accountList, communityList):
+
+    for data in accountList:
+        if data['login'] == name:
+            profileData = {'username' : data['login'], 'name' : data['name'], 'email' : data['email'], 'follower' : data['follower']}
+            return profileData
+        
+    for data in communityList:
+        if data['name'] == name:
+            profileData = {'name': data['name'], 'descrition' : data['description'], 'member' : data['member'], 'admin' : data['admin']}
+            return profileData
+        
+    return 0
+
 
 
 
@@ -52,7 +65,6 @@ def saveChangesAccount():
         json.dump(accountsList, file, indent=2)
 
 def loadDataFromJSON(archive):
-    print(archive)
     try:
         with open(archive, "r") as file:
             data = json.load(file)
@@ -74,18 +86,16 @@ def saveChangesProfile():
 def operations():
     while True:
         accountsList = loadDataFromJSON("Conta.json")
-        print('contas:\n',accountsList,'\n')
         profileList = loadDataFromJSON("Perfil.json")
-        print('perfis:\n',profileList,'\n')
         communityList = loadDataFromJSON("Comunidade.json")
-        print('comunidades:\n',communityList,'\n')
         print()
         print()
         print('Pressiona A para acessar suas mensagens')
         print('Pressione B para enviar uma mensagem')
         print('Pressione C para acessar seus posts')
         print('Pressione D para fazer um post')
-        print('Pressione E para acessar um perfil')
+        print('Pressione E para acessar seu perfil')
+        print('Pressione K para buscar e acessar um perfil')
         print('Pressione Q para voltar ao menu')
         print('Pressione X para fechar o programa')
         print()
@@ -113,7 +123,19 @@ def operations():
         
 
         elif action == 'e':
-            print('Acessar perfil:')
+            print('Acessar seu perfil:')
+    #consertar esta parte do código
+        elif action == 'k':
+            print('Buscar e acessar perfil')
+            name = input('Insira o nome do perfil a ser buscado: ')
+            profileData = searchprofile(name, profileList, accountsList, communityList)
+            while profileData == 0 and name != 'x':
+                name = input('Perfil não encontrado ou perfil incorreto. Inisira novamente o o nome de perfil ou digite x para retornar: ')
+                profileData = searchprofile(name, profileList, accountsList, communityList)
+
+            if name != 'x':
+                print(profileData)
+            
 
 
         elif action == 'q':
