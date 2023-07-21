@@ -1,4 +1,5 @@
 import main
+import re
 import json
 import time
 import sys
@@ -211,13 +212,19 @@ def operations():
                     break
             else:
                 userPassword = input('Qual será sua senha? ')
+                while len(userPassword) < 5:
+                    userPassword = input('Senha muito pequena! Tente novamente: ')
                 userName = input('Qual será seu username? ')
                 for b in accountsList:
                     if b['name'] == userName:
                         print('Esse username já está em uso, tente novamente')
                         break
                 else:
+                    default_email = r'^[a-zA-Z0-9._%+=#]+@[a-zA-Z0-9_]+\.[a-zA-Z0-9].+$'
                     userEmail = input('Qual será seu email? ')
+                    while not re.match(default_email, userEmail):
+                        userEmail = input('E-mail incorreto! Insira um E-mail válido: ')
+
                     for c in accountsList:
                         if c['email'] == userEmail:
                             print('Esse email já está em uso, tente novamente')
@@ -346,10 +353,8 @@ def operations():
                         print('Você não está seguindo nenhuma conta.')
                     else:
                         print('Contas seguidas por você:')
-                        index = 0
-                        for followed_account in user_followed_accounts:
-                            print('       Following', '(' , index , ')' , ':' , followed_account)
-                            index += 1
+                        for index, followed_account in enumerate(user_followed_accounts):
+                            print(f'       Following ({index}): {followed_account}')
                     break
             else:
                 print('Credenciais inválidas. Não foi possível verificar as contas que você segue.')
