@@ -44,15 +44,17 @@ def followAccount(index, name):
 
 def searchprofile(name, profileList, accountList, communityList):
 
-    for data in accountList:
-        if data['login'] == name:
-            profileData = {'username' : data['login'], 'name' : data['name'], 'email' : data['email'], 'follower' : data['follower']}
-            return profileData
-        
-    for data in communityList:
+    for data in profileList:
         if data['name'] == name:
-            profileData = {'name': data['name'], 'descrition' : data['description'], 'member' : data['member'], 'admin' : data['admin']}
-            return profileData
+            for data2 in accountList:
+                if data2['name'] == name:
+                    profileData = {'username' : data2['login'], 'name' : data2['name'], 'email' : data2['email'], 'follower' : data2['follower']}
+                    return profileData
+            
+            for data2 in communityList:
+                if data2['name'] == name:
+                    profileData = {'name': data2['name'], 'descrition' : data2['description'], 'member' : data2['member'], 'admin' : data2['admin']}
+                    return profileData
         
     return 0
 
@@ -60,9 +62,9 @@ def searchprofile(name, profileList, accountList, communityList):
 
 
 #Bloco de funções de manipulação txt
-def saveChangesAccount():
-    with open("Conta.json", "w") as file:
-        json.dump(accountsList, file, indent=2)
+def saveChangesdata(archive, data):
+    with open(archive, "w") as file:
+        json.dump(data, file, indent=2)
 
 def loadDataFromJSON(archive):
     try:
@@ -74,10 +76,6 @@ def loadDataFromJSON(archive):
         data = []
 
     return data
-
-def saveChangesProfile():
-    with open("Perfil.json", "w") as file:
-        json.dump(profileList, file, indent=2)
 
 
 
@@ -124,7 +122,8 @@ def operations():
 
         elif action == 'e':
             print('Acessar seu perfil:')
-    #consertar esta parte do código
+            
+            
         elif action == 'k':
             print('Buscar e acessar perfil')
             name = input('Insira o nome do perfil a ser buscado: ')
@@ -153,8 +152,9 @@ def operations():
 
         
         time.sleep(0.5)
-        saveChangesAccount()
-        saveChangesProfile()
+        saveChangesdata('Perfil.json', profileList)
+        saveChangesdata('Conta.json', accountsList)
+        saveChangesdata('Comunidade.json', communityList)
 
 print('Done')
 
