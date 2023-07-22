@@ -276,7 +276,7 @@ def operations():
                     provPassword = input('Insira a senha: ')
                     for account in accountsList:
                         if account['login'] == provLogin and account['password'] == provPassword:
-                            provName = account['name']
+                            provName = account['login']
                             if is_user_admin(community, provName):
                                 print(f'Você é um administrador da comunidade "{name}"')
                                 print('Escolha o que deseja fazer:')
@@ -382,7 +382,6 @@ def operations():
         
 
         time.sleep(0.5)
-        print(communityList)
         saveChangesdata('Comunidade.json', communityList)
         saveChangesdata('Perfil.json', profileList)
 
