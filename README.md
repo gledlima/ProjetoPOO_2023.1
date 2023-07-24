@@ -7,14 +7,16 @@ Professor: Baldoino Fonseca<br />
 <b>OBS: Mantenha todos os arquivos na mesma pasta para o correto funcionamento do programa</b><br />
 
 <h1 align="left"> FUNCIONALIDADES CRIADAS </h1>
-
-  - Criação de Conta;
-  - Edição/Exclusão de Conta;
-  - Sistema de Seguidores;
-  - Criação de Comunidade;
-  - Edição/Exclusão de Comunidade;
-  - Sistema de Membros;
-  - Moderação de Comunidade;
-  - Envio/Visualização de Mensagens
-  - Envio/Visualização de Postagens
-  - Acessar Perfil
+As 5 da primeira aula:<br />
+  • Criação de Conta;<br />
+  • Edição/Exclusão de Conta;<br />
+  • Sistema de Seguidores;<br />
+  • Criação de Comunidade;<br />
+  • Edição/Exclusão de Comunidade;<br />
+<br />
+As 5 restantes:<br />
+  • Sistema de Membros;<br />
+  • Moderação de Comunidade;<br />
+  • Envio/Visualização de Mensagens;<br />
+  • Envio/Visualização de Postagens<br />
+  • Acessar Perfil<br />
